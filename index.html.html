@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Academy - Learn Cybersecurity from Scratch</title>
+    <meta name="description" content="Beginner-friendly platform to learn Capture The Flag cybersecurity concepts through interactive challenges">
+    <meta name="keywords" content="CTF, cybersecurity, beginner, learning, challenges, web security, cryptography">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        
+        .challenge-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .challenge-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1);
+        }
+        
+        .flag-input {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
+        }
+        
+        .terminal {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .terminal-line::before {
+            content: "$ ";
+            color: #10b981;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 font-sans">
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-flag text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">CTF Academy</h1>
+                        <p class="text-sm text-gray-600">Learn Cybersecurity from Scratch</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('intro')" class="text-gray-700 hover:text-primary-600 font-medium px-3 py-2 rounded-lg hover:bg-primary-50 transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </button>
+                    <button onclick="scrollToSection('categories')" class="text-gray-700 hover:text-primary-600 font-medium px-3 py-2 rounded-lg hover:bg-primary-50 transition-colors">
+                        <i class="fas fa-layer-group mr-2"></i>Categories
+                    </button>
+                    <button onclick="scrollToSection('challenges')" class="text-gray-700 hover:text-primary-600 font-medium px-3 py-2 rounded-lg hover:bg-primary-50 transition-colors">
+                        <i class="fas fa-puzzle-piece mr-2"></i>Challenges
+                    </button>
+                    <button onclick="scrollToSection('progress')" class="text-gray-700 hover:text-primary-600 font-medium px-3 py-2 rounded-lg hover:bg-primary-50 transition-colors">
+                        <i class="fas fa-chart-line mr-2"></i>Progress
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section id="intro" class="mb-16">
+            <div class="text-center max-w-4xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                    Welcome to <span class="text-primary-600">CTF Academy</span>
+                </h2>
+                <p class="text-xl text-gray-600 mb-8">
+                    Learn Capture The Flag cybersecurity concepts from scratch through interactive, simulated challenges.
+                    No backend required - everything runs in your browser!
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-graduation-cap text-primary-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Beginner Friendly</h3>
+                        <p class="text-gray-600">Start from absolute basics with step-by-step guidance</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-laptop-code text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Interactive Challenges</h3>
+                        <p class="text-gray-600">Solve simulated CTF challenges right in your browser</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-shield-alt text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Security Thinking</h3>
+                        <p class="text-gray-600">Develop problem-solving skills and security mindset</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">What is CTF?</h3>
+                    <p class="text-gray-700 mb-6">
+                        Capture The Flag (CTF) is a cybersecurity competition where participants solve challenges to find hidden "flags".
+                        These flags are usually strings of text that prove you've solved the challenge. CTFs help develop real-world
+                        security skills in a safe, legal environment.
+                    </p>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                        <button onclick="startTutorial()" class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
+                            <i class="fas fa-play mr-2"></i> Start Beginner Tutorial
+                        </button>
+                        <button onclick="scrollToSection('challenges')" class="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-6 rounded-lg border border-gray-300 transition-colors flex items-center justify-center">
+                            <i class="fas fa-rocket mr-2"></i> Jump to Challenges
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTF Categories Section -->
+        <section id="categories" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Common CTF Categories</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    CTF challenges are typically divided into categories. Each category tests different cybersecurity skills.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Web Exploitation -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-blue-200 challenge-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-globe text-blue-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Web Exploitation</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Find and exploit vulnerabilities in web applications. Learn about SQL injection, XSS, CSRF, and more.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-star text-yellow-500 mr-1"></i>
+                        <span class="mr-4">Beginner Friendly</span>
+                        <i class="fas fa-clock mr-1"></i>
+                        <span>4 Challenges</span>
+                    </div>
+                </div>
+                
+                <!-- Cryptography -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-green-200 challenge-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-lock text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Cryptography</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Decrypt messages, break codes, and understand encryption algorithms. Learn about ciphers, hashes, and RSA.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-star text-yellow-500 mr-1"></i>
+                        <span class="mr-4">Beginner Friendly</span>
+                        <i class="fas fa-clock mr-1"></i>
+                        <span>3 Challenges</span>
+                    </div>
+                </div>
+                
+                <!-- Forensics -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-purple-200 challenge-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-search text-purple-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Forensics</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Analyze files, images, and network traffic to find hidden information. Learn about metadata, steganography, and file analysis.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-star-half-alt text-yellow-500 mr-1"></i>
+                        <span class="mr-4">Intermediate</span>
+                        <i class="fas fa-clock mr-1"></i>
+                        <span>3 Challenges</span>
+                    </div>
+                </div>
+                
+                <!-- Reverse Engineering -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-red-200 challenge-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-code text-red-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Reverse Engineering</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Analyze programs to understand how they work. Learn about decompilation, debugging, and binary analysis.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-star-half-alt text-yellow-500 mr-1"></i>
+                        <span class="mr-4">Intermediate</span>
+                        <i class="fas fa-clock mr-1"></i>
+                        <span>2 Challenges</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Challenges Section -->
+        <section id="challenges" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Interactive Challenges</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Try these simulated CTF challenges. All solutions are checked locally in your browser - no backend required!
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Challenge 1: Web - Hidden Flag -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="bg-blue-700 text-xs font-semibold px-3 py-1 rounded-full">WEB</span>
+                                <h3 class="text-xl font-bold mt-2">Hidden in Plain Sight</h3>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm opacity-90">50 points</div>
+                                <div class="text-sm opacity-90">Beginner</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-6">
+                            Sometimes flags are hidden right in front of you. Inspect this page carefully to find the hidden flag.
+                            <strong>Hint:</strong> Check the page source or use browser developer tools.
+                        </p>
+                        
+                        <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-2">Challenge Interface</h4>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-white border border-gray-300 rounded">
+                                    <div class="flex justify-between items-center">
+                                        <span>Username:</span>
+                                        <span class="font-mono">admin</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-white border border-gray-300 rounded">
+                                    <div class="flex justify-between items-center">
+                                        <span>Password:</span>
+                                        <span class="font-mono">••••••••</span>
+                                    </div>
+                                </div>
+                                <button class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 rounded transition-colors">
+                                    Login
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Enter the flag you found:</label>
+                            <div class="flex">
+                                <input type="text" id="flag1" placeholder="CTF{...}" class="flag-input flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <button onclick="checkFlag(1)" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-r-lg transition-colors">
+                                    Submit Flag
+                                </button>
+                            </div>
+                            <div id="result1" class="mt-2 text-sm"></div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button onclick="showHint(1)" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                <i class="fas fa-lightbulb mr-2"></i> Show Hint
+                            </button>
+                            <button onclick="showSolution(1)" class="text-gray-600 hover:text-gray-800 font-medium flex items-center">
+                                <i class="fas fa-eye mr-2"></i> Show Solution
+                            </button>
+                        </div>
+                        
+                        <div id="hint1" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-yellow-800 mb-2">Hint</h4>
+                            <p class="text-yellow-700">Right-click on the page and select "View Page Source" or press F12 to open developer tools.</p>
+                        </div>
+                        
+                        <div id="solution1" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-green-800 mb-2">Solution</h4>
+                            <p class="text-green-700 mb-2">The flag is hidden in a comment in the HTML source code. Look for "CTF{" in the page source.</p>
+                            <div class="code-block text-sm">
+                                &lt;!-- CTF{view_source_is_fun} --&gt;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Challenge 2: Crypto - Caesar Cipher -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="bg-green-600 text-white p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="bg-green-700 text-xs font-semibold px-3 py-1 rounded-full">CRYPTO</span>
+                                <h3 class="text-xl font-bold mt-2">Caesar Cipher</h3>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm opacity-90">75 points</div>
+                                <div class="text-sm opacity-90">Beginner</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-6">
+                            The Caesar cipher is one of the simplest encryption techniques. Each letter is shifted by a fixed number
+                            of positions in the alphabet. Decrypt this message to find the flag.
+                        </p>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-gray-900 mb-2">Encrypted Message:</h4>
+                            <div class="code-block text-center text-lg">
+                                FDHVDU LV IXQ
+                            </div>
+                            <p class="text-gray-600 text-sm mt-2">Shift: 3 positions</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex items-center mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mr-4">Decryption Tool:</label>
+                                <div class="flex items-center">
+                                    <button onclick="shiftCipher(-1)" class="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-l">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" id="shiftValue" value="3" min="1" max="25" class="w-16 text-center border-t border-b border-gray-300 py-1">
+                                    <button onclick="shiftCipher(1)" class="w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-r">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Encrypted:</label>
+                                        <input type="text" id="cipherInput" value="FDHVDU LV IXQ" class="w-full px-3 py-2 border border-gray-300 rounded font-mono" readonly>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Decrypted:</label>
+                                        <input type="text" id="cipherOutput" value="CAESAR IS FUN" class="w-full px-3 py-2 border border-gray-300 rounded font-mono bg-gray-50" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Enter the decrypted flag:</label>
+                            <div class="flex">
+                                <input type="text" id="flag2" placeholder="CTF{...}" class="flag-input flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <button onclick="checkFlag(2)" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-r-lg transition-colors">
+                                    Submit Flag
+                                </button>
+                            </div>
+                            <div id="result2" class="mt-2 text-sm"></div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button onclick="showHint(2)" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                <i class="fas fa-lightbulb mr-2"></i> Show Hint
+                            </button>
+                            <button onclick="showSolution(2)" class="text-gray-600 hover:text-gray-800 font-medium flex items-center">
+                                <i class="fas fa-eye mr-2"></i> Show Solution
+                            </button>
+                        </div>
+                        
+                        <div id="hint2" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-yellow-800 mb-2">Hint</h4>
+                            <p class="text-yellow-700">A Caesar cipher with shift 3 means A becomes D, B becomes E, etc. To decrypt, shift backward by 3.</p>
+                        </div>
+                        
+                        <div id="solution2" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-green-800 mb-2">Solution</h4>
+                            <p class="text-green-700 mb-2">Shift each letter back by 3 positions: F→C, D→A, H→E, V→S, D→A, U→R, L→I, V→S, I→F, X→U, Q→N</p>
+                            <div class="code-block text-sm">
+                                Decrypted: CAESAR IS FUN<br>
+                                Flag: CTF{caesar_is_fun}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Challenge 3: Forensics - Image Metadata -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="bg-purple-600 text-white p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="bg-purple-700 text-xs font-semibold px-3 py-1 rounded-full">FORENSICS</span>
+                                <h3 class="text-xl font-bold mt-2">Hidden in Metadata</h3>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm opacity-90">100 points</div>
+                                <div class="text-sm opacity-90">Intermediate</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-6">
+                            Digital images contain metadata - information about the image itself. Sometimes flags are hidden in this metadata.
+                            Analyze the image below to find the hidden flag.
+                        </p>
+                        
+                        <div class="mb-6">
+                            <div class="bg-gray-100 rounded-lg p-4 flex flex-col items-center">
+                                <img src="https://picsum.photos/400/300?random=3" alt="Mountain landscape" class="rounded-lg mb-4 max-w-full h-auto">
+                                <p class="text-gray-600 text-sm">mountain_landscape.jpg</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-gray-900 mb-2">Image Metadata (simulated):</h4>
+                            <div class="terminal p-4">
+                                <div class="terminal-line">file mountain_landscape.jpg</div>
+                                <div class="text-green-400 ml-4">JPEG image data, JFIF standard 1.01</div>
+                                <div class="terminal-line">exiftool mountain_landscape.jpg</div>
+                                <div class="ml-4">
+                                    <div>File Name: mountain_landscape.jpg</div>
+                                    <div>File Size: 245 KB</div>
+                                    <div>Image Width: 1920 pixels</div>
+                                    <div>Image Height: 1080 pixels</div>
+                                    <div>Camera Model: Canon EOS 5D Mark IV</div>
+                                    <div>GPS Latitude: 40.7128° N</div>
+                                    <div>GPS Longitude: 74.0060° W</div>
+                                    <div class="text-yellow-300">Comment: CTF{metadata_is_cool}</div>
+                                    <div>Date Created: 2023-10-15 14:30:22</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Enter the flag from the metadata:</label>
+                            <div class="flex">
+                                <input type="text" id="flag3" placeholder="CTF{...}" class="flag-input flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <button onclick="checkFlag(3)" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-r-lg transition-colors">
+                                    Submit Flag
+                                </button>
+                            </div>
+                            <div id="result3" class="mt-2 text-sm"></div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button onclick="showHint(3)" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                <i class="fas fa-lightbulb mr-2"></i> Show Hint
+                            </button>
+                            <button onclick="showSolution(3)" class="text-gray-600 hover:text-gray-800 font-medium flex items-center">
+                                <i class="fas fa-eye mr-2"></i> Show Solution
+                            </button>
+                        </div>
+                        
+                        <div id="hint3" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-yellow-800 mb-2">Hint</h4>
+                            <p class="text-yellow-700">Look for the "Comment" field in the metadata output. Real forensic tools like exiftool can extract this information.</p>
+                        </div>
+                        
+                        <div id="solution3" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-green-800 mb-2">Solution</h4>
+                            <p class="text-green-700 mb-2">The flag is in the Comment field of the image metadata:</p>
+                            <div class="code-block text-sm">
+                                Comment: CTF{metadata_is_cool}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Challenge 4: Web - JavaScript Obfuscation -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="bg-blue-700 text-xs font-semibold px-3 py-1 rounded-full">WEB</span>
+                                <h3 class="text-xl font-bold mt-2">JavaScript Obfuscation</h3>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm opacity-90">125 points</div>
+                                <div class="text-sm opacity-90">Intermediate</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-6">
+                            Sometimes developers obfuscate JavaScript code to hide functionality. Can you deobfuscate this code
+                            to find the flag?
+                        </p>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-gray-900 mb-2">Obfuscated JavaScript:</h4>
+                            <div class="code-block text-sm">
+                                <pre>function checkFlag(input) {
+    var a = "C";
+    var b = "T";
+    var c = "F";
+    var d = "{";
+    var e = "j";
+    var f = "s";
+    var g = "_";
+    var h = "d";
+    var i = "e";
+    var j = "o";
+    var k = "b";
+    var l = "f";
+    var m = "u";
+    var n = "s";
+    var o = "c";
+    var p = "a";
+    var q = "t";
+    var r = "e";
+    var s = "}";
+    
+    var flag = a + b + c + d + e + f + g + h + i + j + k + g + l + m + n + o + p + q + r + i + s;
+    
+    if (input === flag) {
+        return true;
+    }
+    return false;
+}</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex items-center mb-4">
+                                <button onclick="deobfuscateCode()" class="bg-gray-800 hover:bg-gray-900 text-white font-medium py-2 px-4 rounded flex items-center">
+                                    <i class="fas fa-play mr-2"></i> Run Deobfuscation
+                                </button>
+                                <div id="deobfuscatedResult" class="ml-4 font-mono text-gray-700"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Enter the deobfuscated flag:</label>
+                            <div class="flex">
+                                <input type="text" id="flag4" placeholder="CTF{...}" class="flag-input flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <button onclick="checkFlag(4)" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-r-lg transition-colors">
+                                    Submit Flag
+                                </button>
+                            </div>
+                            <div id="result4" class="mt-2 text-sm"></div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button onclick="showHint(4)" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                <i class="fas fa-lightbulb mr-2"></i> Show Hint
+                            </button>
+                            <button onclick="showSolution(4)" class="text-gray-600 hover:text-gray-800 font-medium flex items-center">
+                                <i class="fas fa-eye mr-2"></i> Show Solution
+                            </button>
+                        </div>
+                        
+                        <div id="hint4" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-yellow-800 mb-2">Hint</h4>
+                            <p class="text-yellow-700">The code builds the flag by concatenating single-character strings. Try running the code in a JavaScript console or manually concatenate the variables.</p>
+                        </div>
+                        
+                        <div id="solution4" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                            <h4 class="font-semibold text-green-800 mb-2">Solution</h4>
+                            <p class="text-green-700 mb-2">Concatenate all the variables in order:</p>
+                            <div class="code-block text-sm">
+                                a + b + c + d + e + f + g + h + i + j + k + g + l + m + n + o + p + q + r + i + s<br>
+                                = "C" + "T" + "F" + "{" + "j" + "s" + "_" + "d" + "e" + "o" + "b" + "_" + "f" + "u" + "s" + "c" + "a" + "t" + "e" + "e" + "}"<br>
+                                = CTF{js_deobfuscatee}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Tracking -->
+        <section id="progress" class="mb-16">
+            <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Your Learning Progress</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div class="text-center">
+                        <div class="inline-block relative">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#3b82f6" stroke-width="10" stroke-dasharray="283" stroke-dashoffset="113" class="progress-ring-circle" id="progressCircle"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-3xl font-bold text-gray-900" id="progressPercent">25%</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mt-4">Overall Progress</h3>
+                        <p class="text-gray-600" id="progressText">1 of 4 challenges completed</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Completed Challenges</h3>
+                        <div class="space-y-3" id="completedChallenges">
+                            <div class="flex items-center p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                <div>
+                                    <div class="font-medium text-gray-900">Hidden in Plain Sight</div>
+                                    <div class="text-sm text-gray-600">Web • 50 points</div>
+                                </div>
+                            </div>
+                            <!-- More challenges will be added dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Next Steps</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Learn About SQL Injection</h4>
+                                <p class="text-blue-700 text-sm mb-3">One of the most common web vulnerabilities</p>
+                                <button onclick="startTutorial('sql')" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors">
+                                    Start Tutorial
+                                </button>
+                            </div>
+                            <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                                <h4 class="font-semibold text-purple-800 mb-2">Try More Crypto Challenges</h4>
+                                <p class="text-purple-700 text-sm mb-3">Learn about base64, XOR, and more ciphers</p>
+                                <button onclick="scrollToSection('challenges')" class="text-sm bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded transition-colors">
+                                    View Challenges
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button onclick="resetProgress()" class="text-gray-600 hover:text-gray-800 font-medium flex items-center justify-center mx-auto">
+                        <i class="fas fa-redo mr-2"></i> Reset Progress
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Resources -->
+        <section class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Learning Resources</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Continue your cybersecurity journey with these recommended resources
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-book text-red-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">CTF Field Guide</h3>
+                    <p class="text-gray-600 mb-4">Comprehensive guide covering all major CTF categories with examples and walkthroughs.</p>
+                    <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                        Visit Resource <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-video text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Web Security Academy</h3>
+                    <p class="text-gray-600 mb-4">Free online training with interactive labs for web security vulnerabilities.</p>
+                    <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                        Visit Resource <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-users text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">CTF Communities</h3>
+                    <p class="text-gray-600 mb-4">Join Discord servers and forums to learn from experienced CTF players.</p>
+                    <a href="#" class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                        Visit Resource <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-flag text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">CTF Academy</h3>
+                            <p class="text-gray-400 text-sm">Learn Cybersecurity</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">
+                        Beginner-friendly platform to learn Capture The Flag cybersecurity concepts through interactive challenges.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Web Exploitation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cryptography</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Forensics</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Reverse Engineering</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Beginner's Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Challenge Archive</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Learning Path</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Tools & Software</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4 mb-6">
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Made with <i class="fas fa-heart text-red-500"></i> for cybersecurity education
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 CTF Academy. All rights reserved. This is an educational platform for learning cybersecurity concepts.</p>
+                <p class="mt-2 text-sm">Note: All challenges run entirely in your browser with no backend infrastructure.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hidden flag in HTML comment for Challenge 1 -->
+    <!-- CTF{view_source_is_fun} -->
+    
+    <script>
+        // Define all data at the beginning
+        const challenges = [
+            {
+                "id": 1,
+                "title": "Hidden in Plain Sight",
+                "category": "Web",
+                "points": 50,
+                "difficulty": "Beginner",
+                "solved": false,
+                "flag": "CTF{view_source_is_fun}",
+                "hint": "Right-click on the page and select "View Page Source" or press F12 to open developer tools.",
+                "solution": "The flag is hidden in a comment in the HTML source code. Look for "CTF{" in the page source."
+            },
+            {
+                "id": 2,
+                "title": "Caesar Cipher",
+                "category": "Crypto",
+                "points": 75,
+                "difficulty": "Beginner",
+                "solved": false,
+                "flag": "CTF{caesar_is_fun}",
+                "hint": "A Caesar cipher with shift 3 means A becomes D, B becomes E, etc. To decrypt, shift backward by 3.",
+                "solution": "Shift each letter back by 3 positions: F→C, D→A, H→E, V→S, D→A, U→R, L→I, V→S, I→F, X→U, Q→N"
+            },
+            {
+                "id": 3,
+                "title": "Hidden in Metadata",
+                "category": "Forensics",
+                "points": 100,
+                "difficulty": "Intermediate",
+                "solved": false,
+                "flag": "CTF{metadata_is_cool}",
+                "hint": "Look for the "Comment" field in the metadata output. Real forensic tools like exiftool can extract this information.",
+                "solution": "The flag is in the Comment field of the image metadata: CTF{metadata_is_cool}"
+            },
+            {
+                "id": 4,
+                "title": "JavaScript Obfuscation",
+                "category": "Web",
+                "points": 125,
+                "difficulty": "Intermediate",
+                "solved": false,
+                "flag": "CTF{js_deobfuscatee}",
+                "hint": "The code builds the flag by concatenating single-character strings. Try running the code in a JavaScript console or manually concatenate the variables.",
+                "solution": "Concatenate all the variables in order: a + b + c + d + e + f + g + h + i + j + k + g + l + m + n + o + p + q + r + i + s = CTF{js_deobfuscatee}"
+            }
+        ];
+        
+        const userProgress = {
+            "completed": [],
+            "totalPoints": 0,
+            "lastActivity": new Date().toISOString()
+        };
+        
+        // Initialize progress from localStorage
+        function initProgress() {
+            const savedProgress = localStorage.getItem("ctfProgress");
+            if (savedProgress) {
+                Object.assign(userProgress, JSON.parse(savedProgress));
+                updateProgressUI();
+            }
+        }
+        
+        // Save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem("ctfProgress", JSON.stringify(userProgress));
+        }
+        
+        // Update progress UI
+        function updateProgressUI() {
+            const totalChallenges = challenges.length;
+            const completedCount = userProgress.completed.length;
+            const progressPercent = Math.round((completedCount / totalChallenges) * 100);
+            
+            // Update progress circle
+            const circle = document.getElementById("progressCircle");
+            const circumference = 2 * Math.PI * 45;
+            const offset = circumference - (progressPercent / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            
+            // Update progress text
+            document.getElementById("progressPercent").textContent = `${progressPercent}%`;
+            document.getElementById("progressText").textContent = `${completedCount} of ${totalChallenges} challenges completed`;
+            
+            // Update completed challenges list
+            const completedList = document.getElementById("completedChallenges");
+            completedList.innerHTML = "";
+            
+            userProgress.completed.forEach(challengeId => {
+                const challenge = challenges.find(c => c.id === challengeId);
+                if (challenge) {
+                    const div = document.createElement("div");
+                    div.className = "flex items-center p-3 bg-green-50 border border-green-200 rounded-lg";
+                    div.innerHTML = `
+                        <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                        <div>
+                            <div class="font-medium text-gray-900">${challenge.title}</div>
+                            <div class="text-sm text-gray-600">${challenge.category} • ${challenge.points} points</div>
+                        </div>
+                    `;
+                    completedList.appendChild(div);
+                }
+            });
+            
+            // If no challenges completed, show message
+            if (completedCount === 0) {
+                const div = document.createElement("div");
+                div.className = "text-center text-gray-500 py-4";
+                div.textContent = "No challenges completed yet. Start solving!";
+                completedList.appendChild(div);
+            }
+        }
+        
+        // Check flag submission
+        function checkFlag(challengeId) {
+            const input = document.getElementById(`flag${challengeId}`).value.trim();
+            const resultDiv = document.getElementById(`result${challengeId}`);
+            const challenge = challenges.find(c => c.id === challengeId);
+            
+            if (!challenge) {
+                resultDiv.innerHTML = `<span class="text-red-600">Error: Challenge not found</span>`;
+                return;
+            }
+            
+            if (input === challenge.flag) {
+                resultDiv.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i> Correct! Flag submitted successfully.</span>`;
+                
+                // Mark as solved if not already
+                if (!userProgress.completed.includes(challengeId)) {
+                    userProgress.completed.push(challengeId);
+                    userProgress.totalPoints += challenge.points;
+                    saveProgress();
+                    updateProgressUI();
+                    
+                    // Show confetti effect
+                    showConfetti();
+                }
+            } else {
+                resultDiv.innerHTML = `<span class="text-red-600"><i class="fas fa-times-circle mr-1"></i> Incorrect flag. Try again!</span>`;
+            }
+        }
+        
+        // Show hint for challenge
+        function showHint(challengeId) {
+            const hintDiv = document.getElementById(`hint${challengeId}`);
+            const solutionDiv = document.getElementById(`solution${challengeId}`);
+            
+            // Hide solution if showing
+            solutionDiv.classList.add("hidden");
+            
+            // Toggle hint
+            hintDiv.classList.toggle("hidden");
+        }
+        
+        // Show solution for challenge
+        function showSolution(challengeId) {
+            const hintDiv = document.getElementById(`hint${challengeId}`);
+            const solutionDiv = document.getElementById(`solution${challengeId}`);
+            
+            // Hide hint if showing
+            hintDiv.classList.add("hidden");
+            
+            // Toggle solution
+            solutionDiv.classList.toggle("hidden");
+        }
+        
+        // Caesar cipher shift function
+        function shiftCipher(delta) {
+            const shiftInput = document.getElementById("shiftValue");
+            let shift = parseInt(shiftInput.value) + delta;
+            
+            // Keep shift between 1 and 25
+            if (shift < 1) shift = 25;
+            if (shift > 25) shift = 1;
+            
+            shiftInput.value = shift;
+            updateCipherOutput();
+        }
+        
+        // Update cipher output based on shift
+        function updateCipherOutput() {
+            const input = "FDHVDU LV IXQ";
+            const shift = parseInt(document.getElementById("shiftValue").value);
+            let output = "";
+            
+            for (let i = 0; i < input.length; i++) {
+                const char = input[i];
+                
+                if (char >= "A" && char <= "Z") {
+                    // Shift character backward for decryption
+                    const code = char.charCodeAt(0) - 65;
+                    const shiftedCode = (code - shift + 26) % 26;
+                    output += String.fromCharCode(shiftedCode + 65);
+                } else {
+                    output += char;
+                }
+            }
+            
+            document.getElementById("cipherOutput").value = output;
+        }
+        
+        // Deobfuscate JavaScript code
+        function deobfuscateCode() {
+            const resultDiv = document.getElementById("deobfuscatedResult");
+            
+            // Simulate deobfuscation
+            resultDiv.innerHTML = `<span class="text-green-600">Deobfuscated flag: CTF{js_deobfuscatee}</span>`;
+            
+            // Also fill the flag input
+            document.getElementById("flag4").value = "CTF{js_deobfuscatee}";
+        }
+        
+        // Start tutorial
+        function startTutorial(topic = "beginner") {
+            alert(`Starting ${topic} tutorial! This would open a step-by-step guide in a real implementation.`);
+            // In a real implementation, this would navigate to a tutorial page
+        }
+        
+        // Reset progress
+        function resetProgress() {
+            if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
+                userProgress.completed = [];
+                userProgress.totalPoints = 0;
+                saveProgress();
+                updateProgressUI();
+                
+                // Clear all flag inputs and results
+                for (let i = 1; i <= 4; i++) {
+                    document.getElementById(`flag${i}`).value = "";
+                    document.getElementById(`result${i}`).innerHTML = "";
+                    document.getElementById(`hint${i}`).classList.add("hidden");
+                    document.getElementById(`solution${i}`).classList.add("hidden");
+                }
+                
+                alert("Progress reset successfully!");
+            }
+        }
+        
+        // Scroll to section
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+        
+        // Confetti effect
+        function showConfetti() {
+            const confettiCount = 100;
+            const confettiContainer = document.createElement("div");
+            confettiContainer.style.position = "fixed";
+            confettiContainer.style.top = "0";
+            confettiContainer.style.left = "0";
+            confettiContainer.style.width = "100%";
+            confettiContainer.style.height = "100%";
+            confettiContainer.style.pointerEvents = "none";
+            confettiContainer.style.zIndex = "9999";
+            document.body.appendChild(confettiContainer);
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement("div");
+                confetti.style.position = "absolute";
+                confetti.style.width = "10px";
+                confetti.style.height = "10px";
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.borderRadius = "50%";
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = "-20px";
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confettiContainer.appendChild(confetti);
+                
+                // Animate confetti
+                const animation = confetti.animate([
+                    { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 20}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 2000,
+                    easing: "cubic-bezier(0.215, 0.61, 0.355, 1)"
+                });
+                
+                // Remove confetti after animation
+                animation.onfinish = () => {
+                    confetti.remove();
+                };
+            }
+            
+            // Remove container after all confetti is gone
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 3000);
+        }
+        
+        function getRandomColor() {
+            const colors = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            initProgress();
+            updateCipherOutput(); // Initialize cipher output
+            
+            // Set up shift value change listener
+            document.getElementById("shiftValue").addEventListener("change", updateCipherOutput);
+            document.getElementById("shiftValue").addEventListener("input", updateCipherOutput);
+            
+            // Auto-solve first challenge for demo purposes
+            setTimeout(() => {
+                if (!userProgress.completed.includes(1)) {
+                    document.getElementById("flag1").value = "CTF{view_source_is_fun}";
+                    checkFlag(1);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
